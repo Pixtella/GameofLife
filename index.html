@@ -2,28 +2,142 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <link rel="icon" href="img/icon.png" type ="image/x-icon">
-  <title>Conway's Game of Life</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <link rel="icon" href="img/icon.png" type="image/x-icon">
+    <title>Conway's Game of Life</title>
+    <link type="text/css" rel="stylesheet" href="css/sty.css" />
 </head>
 
-<body>
-  
+<body style="background-color: rgb(36, 36, 36); margin: auto;">
+    <br>
+    <div style="text-align: center;">
+        <a class="myTitle">Conway's Game of Life</a>
+    </div>
+    <canvas class="grid" width="1440px" height="720px" id="grd">
+    </canvas>
+    <audio autoplay="true" loop="loop" preload="auto" src="src/bgm.mp3" controls="controls" hidden="true"></audio>
 
-  <!-- Custom scripts -->
-  <script type="text/javascript"></script>
+    <!-- control panel -->
+    <div class="controlPanel" style="text-align: center;">
+        <div style="text-align: right;">
+            <a style="text-align: right; color: aliceblue; font-size: 24px;" id="iterc">Iteration: 0</a>
+            <a>&ensp;&ensp;&ensp;&ensp;&ensp;</a>
+        </div>
+        <button
+            style="background-color: rgb(12, 49, 184); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onclick="init()">Random init</button>
+        <select
+            style="background-color: rgb(12, 49, 184); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onchange=loadPattern() id="patt">
+            <option value="none">Choose a pattern</option>
+            <option value="glider">Glider</option>
+            <option value="hwss">Heavy-weight spaceship</option>
+            <option value="pulsar">Pulsar</option>
+            <option value="pd">Penta-decathlon</option>
+            <option value="gg">Gosper glider gun</option>
+        </select>
+        <button
+            style="background-color: rgb(12, 49, 184); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onclick="clearAll()">Clear all</button>
+        <button
+            style="background-color: rgb(12, 49, 184); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onclick="refresh()">Next generation</button>
+        <select
+            style="background-color: rgb(12, 49, 184); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onchange="gapChange()" id="gap">
+            <option value="10">Speed: 10ms</option>
+            <option value="50">Speed: 50ms</option>
+            <option value="100" selected="selected">Speed: 100ms</option>
+            <option value="200">Speed: 200ms</option>
+            <option value="300">Speed: 300ms</option>
+            <option value="400">Speed: 400ms</option>
+            <option value="500">Speed: 500ms</option>
+            <option value="600">Speed: 600ms</option>
+            <option value="700">Speed: 700ms</option>
+            <option value="800">Speed: 800ms</option>
+            <option value="900">Speed: 900ms</option>
+            <option value="1000">Speed: 1000ms</option>
+        </select>
+        <button
+            style="background-color: rgb(75, 174, 21); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onclick="start()">Start evolution</button>
+        <button
+            style="background-color: rgb(157, 9, 48); color: white; border: 2px solid white; border-radius: 10px; padding: 10px 20px; font-size: 24px; font-family: 'Times New Roman', Times, serif; cursor: pointer;"
+            onclick="stop()">Stop evolution</button>
+    </div>
+    <!-- a short wiki-->
+    <br><br><br><br><br><br><br>
+    <div class="appendix">
+        <a style="font-size: 48px;">A short introduction to Conway's Game of Life</a>
+        <p style="font-family: sans-serif; font-size: large;">&ensp;&ensp;&ensp;&ensp;The Game of Life,
+            also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway
+            in 1970. It is a zero-player game, meaning that its evolution is determined by its initial state, requiring
+            no further input. One interacts with the Game of Life by creating an initial configuration and observing how
+            it evolves. It is Turing complete and can simulate a universal constructor or any other Turing machine.</p>
+        <a style="font-size: 36px;">Rules</a>
+        <p style=" font-family: sans-serif; font-size: large;">&ensp;&ensp;&ensp;&ensp;
+            The universe of the Game of Life is an infinite, two-dimensional orthogonal grid of square cells, each of
+            which is in one of two possible states, live or dead (or populated and unpopulated, respectively). Every
+            cell interacts with its eight neighbours, which are the cells that are horizontally, vertically, or
+            diagonally adjacent. At each step in time, the following transitions occur:
+            <br><br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;1. Any live cell with fewer than two live neighbours dies,
+            as if by underpopulation.<br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2. Any live cell with two or three live neighbours lives on
+            to the next generation.<br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;3. Any live cell with more than three live neighbours dies,
+            as if by overpopulation.<br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;4. Any dead cell with exactly three live neighbours becomes
+            a live cell, as if by reproduction.<br><br>
+            &ensp;&ensp;&ensp;&ensp;These rules, which compare the behaviour of the automaton to real life, can be
+            condensed into the following:<br><br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;1. Any live cell with two or three live neighbours
+            survives.<br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;2. Any dead cell with three live neighbours becomes a live
+            cell.<br>
+            &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;3. All other live cells die in the next generation.
+            Similarly, all other dead cells stay dead.<br><br>
+            &ensp;&ensp;&ensp;&ensp;The initial pattern constitutes the seed of the system. The first generation is
+            created by applying the above rules simultaneously to every cell in the seed, live or dead; births and
+            deaths occur simultaneously, and the discrete moment at which this happens is sometimes called a tick.[nb 1]
+            Each generation is a pure function of the preceding one. The rules continue to be applied repeatedly to
+            create further generations.<br>
+        </p>
+        <p style="font-family: sans-serif; font-size: 24px">In this version of the Game of Life, players can change the
+            status of a cell by clicking on it.</p>
+        <a style="font-size: 36px;">First public appearance of this game</a>
+        <br><br>
+        <img src="img/ref.png">
+        <br><br>
+        <a style="font-size: 48px;">References & Acknowledgement</a>
+        <p style="font-family: sans-serif; font-size:large">[1] MARTIN G. <a href="src/scientificamerican1070-120.pdf"
+                style="color: aqua;">Mathematical Games</a> [J]. Scientific American,
+            1970, 223(4): 120-3.</p>
+        <p style="font-family: sans-serif; font-size:large">[2] Wikipedia contributors. (2023, May 17). Conway's Game of
+            Life. In Wikipedia, The Free Encyclopedia. Retrieved 10:40, June 11, 2023, from <a
+                href="https://en.wikipedia.org/w/index.php?title=Conway%27s_Game_of_Life&oldid=1155208907"
+                style="color: aqua;">https://en.wikipedia.org/w/index.php?title=Conway%27s_Game_of_Life&oldid=1155208907</a>
+        </p>
+        <p style="font-family: sans-serif; font-size:large">[3] <a href="https://conwaylife.com/wiki/Main_Page"
+                style="color: aqua;">LifeWiki</a></p>
+        <p style="font-family: sans-serif; font-size:large">[4] Phillip Bradbury <a
+                href="https://www.youtube.com/watch?v=4lO0iZDzzXk" style="color: aqua;">Life in Life in Life</a>
+    </div>
+
+
+    <!-- import supporting js -->
+    <script type="text/javascript" src="js/game.js"></script>
 </body>
 
 <footer class="bg-dark text-center text-lg-start text-white">
-  <!-- Copyright -->
-  <div class="text-center p-3">
-    <a style="color:darkgrey">© 2023 Copyright:&ensp;</a>
-    <a href="https://github.com/Pixtella">Pixtella</a>
-  <!-- Copyright -->
+    <!-- Copyright -->
+    <div class="text-center p-3">
+        <a style="color:darkgrey">© 2023 Copyright:&ensp;</a>
+        <a href="https://github.com/Pixtella" style="color: azure;">Pixtella</a>
+        <a style="color: azure;">Fork me on Github!</a>
+        <!-- Copyright -->
 </footer>
-
-
 
 </html>

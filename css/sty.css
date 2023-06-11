@@ -1,0 +1,80 @@
+.myTitle {
+    color: palevioletred;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 64px;
+    animation: title-fade-in 4s ease 0s 1;
+}
+
+@keyframes title-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.grid {
+    display: block;
+    margin: 20px auto;
+    animation: grid-fade-in 4.5s ease 0s 1;
+}
+
+@keyframes grid-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.controlPanel {
+    display: block;
+    margin: 20px auto;
+    animation: controlPanel-fade-in 5s ease 0s 1;
+}
+
+@keyframes controlPanel-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+.appendix{
+    display: block;
+    margin: 20px auto;
+    margin-left: 7vw;
+    margin-right: 7vw;
+    color: aliceblue;
+    animation: appendix-fade-in 5.5s ease 0s 1;
+}
+@keyframes appendix-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
