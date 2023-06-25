@@ -12,10 +12,27 @@ for (var i = 0; i < n + 2; i++) {
 var flgs = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 var intervalID = 0;
 window.onload = function () {
+    // alert("Welcome to the Game of Life!\n\n");
+    
+    
+    drawCells();
     drawGrid();
 }
 board.onclick = function (pos) {
     gridClick(pos);
+}
+
+function fstb() {
+    mus = document.getElementById("bgmus");
+    mus.volume = 0.5;
+    mus.play();
+    var fst = document.getElementById("fstbut");
+    fst.remove();
+    clearAll();
+    document.querySelector('.myTitle').style.animationPlayState = 'running'
+    document.getElementById('grd').style.animationPlayState = 'running'
+    document.getElementById('cp').style.animationPlayState = 'running'
+    document.querySelector('.appendix').style.animationPlayState = 'running'
 }
 //handle button click
 function start() {
@@ -37,8 +54,7 @@ function stop() {
 function init() {
     console.log("init");
     stop();
-    iter = 0;
-    document.getElementById("iterc").innerHTML = "Iteration: " + iter;
+    iter = -1;
     randomInit();
     refresh();
 }
@@ -127,16 +143,16 @@ function lifeInteration() {
 //fill the cell at (i,j) with color c
 function fillCell(i, j, c) {
     if (c == 3) {
-        ctx.fillStyle = "rgba(0,200,90,0.8)";
+        ctx.fillStyle = "rgba(46,125,50,1)";
     }
     else if (c == 2) {
-        ctx.fillStyle = "rgba(0,235,104,0.8)";
+        ctx.fillStyle = "rgba(111,255,3,1)";
     }
     else if (c == 1) {
-        ctx.fillStyle = "rgba(0,235,104,0.4)";
+        ctx.fillStyle = "rgba(204,255,144,1)";
     }
     else if (c == 0) {
-        ctx.fillStyle = "rgba(36,36,36,1)";
+        ctx.fillStyle = "rgba(55, 71, 79, 0.75)";
     }
     else {
         console.log("error")
@@ -149,6 +165,8 @@ function fillCell(i, j, c) {
 }
 //draw the cells
 function drawCells() {
+    //clear the canvas
+    ctx.clearRect(0, 0, board.width, board.height);
     //define a 2d array to store the map of cells
     var mp = Array(n + 2).fill(0);
     for (var i = 0; i < n + 2; i++) {
